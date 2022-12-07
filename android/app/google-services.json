@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "715138194640",
+    "project_id": "neverforgetnew",
+    "storage_bucket": "neverforgetnew.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715138194640:android:2907db4dae18a9330052d5",
+        "android_client_info": {
+          "package_name": "com.example.never_forget"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "715138194640-7v0i82eovfljc8qhge608jko7g4d2akr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmvBb0b2gwGh2F7vIJ9-EJdsFFOv8xvt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "715138194640-7v0i82eovfljc8qhge608jko7g4d2akr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
