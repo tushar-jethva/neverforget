@@ -5,11 +5,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:never_forget/FirebaseMethods/things_methods.dart';
 import 'package:never_forget/models/user_model.dart';
 import 'package:never_forget/providers/user_provider.dart';
+import 'package:never_forget/screens/aemj.dart';
 import 'package:never_forget/screens/signin.dart';
+import 'package:never_forget/screens/textScreen.dart';
 import 'package:never_forget/utills/utills.dart';
 import 'package:never_forget/widget/colors.dart';
 import 'package:never_forget/widget/home_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:never_forget/widget/mytextcard.dart';
 import 'package:provider/provider.dart';
 
 class MyHomeScreen extends StatefulWidget {
@@ -23,6 +26,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
   final TextEditingController _itemNameController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Uint8List? _file;
+  bool isUploaded = false;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -41,10 +45,22 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     await _userprovider.refreshUser();
   }
 
-  void postImage(String uid, String username) async {
+  void postImage(String uid) async {
     try {
-      String res = await ThingMethods()
-          .uploadThing(_itemNameController.text, uid, _file!, username);
+      setState(() {
+        isUploaded = true;
+      });
+
+      String res = await ThingMethods().uploadThing(
+        uid,
+        
+        _file!,
+        _itemNameController.text,
+      );
+
+      setState(() {
+        isUploaded = false;
+      });
 
       if (res == 'Success') {
         showSnackbar('Post is successfully uploaded!', context);
@@ -104,72 +120,78 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel user = Provider.of<UserProvider>(context).getUser;
+    
     return _file == null
         ? Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.blue.shade300,
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.blue.shade200,
               title: Text(
                 'Never Forget',
-                style: TextStyle(fontFamily: 'NewFont'),
+                style: TextStyle(fontFamily: 'NewFont', color: Colors.black),
               ),
               actions: [
                 IconButton(
-                    onPressed: () {
-                      _selectImage(context);
-                    },
-                    icon: const Icon(Icons.add)),
+                  onPressed: () {
+                    _selectImage(context);
+                  },
+                  icon: const Icon(Icons.add),
+                  color: Colors.black,
+                ),
                 IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => MySignIn()));
-                    },
-                    icon: const Icon(Icons.settings)),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => MySignIn()));
+                  },
+                  icon: const Icon(Icons.logout),
+                  color: Colors.black,
+                ),
               ],
             ),
-            // body: StreamBuilder(
-            //   stream: FirebaseFirestore.instance
-            //       .collection('backImages')
-            //       .snapshots(),
-            //   builder: (context,
-            //       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return Center(
-            //         child: CircularProgressIndicator(color: blueColor),
-            //       );
-            //     }
-
-            //     return ListView.builder(
-            //         itemCount: snapshot.data!.docs.length,
-            //         itemBuilder: (context, index) => MyHomeCard(
-            //               snap: snapshot.data!.docs[index].data(),
-            //             ));
-            //   },
-            // ),
+            backgroundColor: backgroundcolor,
             body: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('backImages')
+                  .where('uid', isEqualTo: _auth.currentUser!.uid)
                   .snapshots(),
               builder: (context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    !snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (!snapshot.hasData) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
                 }
                 return ListView.builder(
-                    itemCount: 1,
-                    itemBuilder: (context, index) =>
-                        MyHomeCard(snap: snapshot.data!.docs[index].data()));
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => MyTextScreen(
+                                      snap: snapshot.data!.docs[index].data(),
+                                    )));
+                          },
+                          child: MyHomeCard(
+                              snap: snapshot.data!.docs[index].data()));
+                    });
               },
             ),
           )
         : Scaffold(
+            backgroundColor: backgroundcolor,
             body: Center(
                 child: TextButton(
-              onPressed: () => postImage(user!.uid, user.username),
-              child: Text('Upload'),
+              onPressed: () => postImage(_auth.currentUser!.uid),
+              child: isUploaded
+                  ? Center(
+                      child: CircularProgressIndicator(color: blueColor),
+                    )
+                  : Text('Upload'),
             )),
           );
   }

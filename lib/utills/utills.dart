@@ -16,7 +16,6 @@ import 'package:image_picker/image_picker.dart';
 //   }
 // }
 
-
 pickImage(ImageSource source, FilterQuality quality) async {
   ImagePicker imagePicker = ImagePicker();
   XFile? file = await imagePicker.pickImage(source: source);
@@ -28,3 +27,5 @@ pickImage(ImageSource source, FilterQuality quality) async {
 showSnackbar(String content, BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(content)));
 }
+
+const backgroundcolor = Color(0xFFEDF0F6);

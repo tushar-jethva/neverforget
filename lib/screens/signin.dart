@@ -20,7 +20,7 @@ class MySignIn extends StatefulWidget {
 class _MySignInState extends State<MySignIn> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-   bool _isLoading = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -37,9 +37,9 @@ class _MySignInState extends State<MySignIn> {
     String res = await MyAuthMethods().signInUser(
         email: _emailController.text, password: _passwordController.text);
 
-        setState(() {
-          _isLoading = false;
-        });
+    setState(() {
+      _isLoading = false;
+    });
     if (res != 'Success') {
       showSnackbar(res, context);
     } else {
@@ -55,8 +55,8 @@ class _MySignInState extends State<MySignIn> {
       width: double.infinity,
       padding: EdgeInsets.all(20),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Gap(200),
           Text(
             'Never Forget',
             style: TextStyle(
@@ -78,25 +78,25 @@ class _MySignInState extends State<MySignIn> {
           ),
           Gap(10),
           InkWell(
-                onTap: signIn,
-                child: Container(
-                  child: _isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text('Sign In'),
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
+            onTap: signIn,
+            child: Container(
+              child: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
                       ),
-                      color: blueColor),
-                ),
-              ),
+                    )
+                  : Text('Sign In'),
+              width: double.infinity,
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(vertical: 12),
+              decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                  ),
+                  color: blueColor),
+            ),
+          ),
           Gap(20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

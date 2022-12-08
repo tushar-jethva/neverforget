@@ -40,6 +40,7 @@ dependencies:
     sdk: flutter
   gap: ^2.0.1
   image_picker: ^0.8.6
+  intl: ^0.17.0
   provider: ^6.0.4
   uuid: ^3.0.7
 

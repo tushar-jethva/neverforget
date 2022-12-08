@@ -26,9 +26,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
@@ -42,6 +40,11 @@ class MyApp extends StatelessWidget {
               }
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(color: blueColor),
+              );
+            }
+            if (!snapshot.hasData) {
               return Center(
                 child: CircularProgressIndicator(color: blueColor),
               );

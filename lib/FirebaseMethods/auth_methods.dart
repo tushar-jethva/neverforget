@@ -37,7 +37,7 @@ class MyAuthMethods {
             .uploadImageToStorage('profilePic', profileFile, false);
 
         UserModel users = UserModel(
-            username: username,
+            
             email: email,
             uid: userCredential.user!.uid,
             profilePic: photo_url);
